@@ -1,0 +1,22 @@
+--- a/hooks/50-ntp.conf
++++ b/hooks/50-ntp.conf
+@@ -37,16 +37,16 @@
+ if [ -z "$ntp_service" ]; then
+ 	case "$NTP_CONF" in
+ 	*chrony.conf)		ntp_service=chronyd;;
+-	*)			ntp_service=ntpd;;
++	*)			ntp_service=ntp;;
+ 	esac
+ fi
+ 
+ # Debian has a seperate file for DHCP config to avoid stamping on
+ # the master.
+-if [ "$ntp_service" = ntpd ] && type invoke-rc.d >/dev/null 2>&1; then
++if [ "$ntp_service" = ntp ] && type invoke-rc.d >/dev/null 2>&1; then
+ 	[ -e /var/lib/ntp ] || mkdir /var/lib/ntp
+ 	: ${ntp_service:=ntp}
+-	: ${NTP_DHCP_CONF:=/var/lib/ntp/ntp.conf.dhcp}
++	: ${NTP_DHCP_CONF:=/run/ntp.conf.dhcp}
+ fi
+ 
+ : ${ntp_restart_cmd:=service_condcommand $ntp_service restart}

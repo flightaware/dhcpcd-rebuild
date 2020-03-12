@@ -1,0 +1,39 @@
+--- a/src/dhcpcd.conf
++++ b/src/dhcpcd.conf
+@@ -8,12 +8,12 @@
+ hostname
+ 
+ # Use the hardware address of the interface for the Client ID.
+-#clientid
++clientid
+ # or
+ # Use the same DUID + IAID as set in DHCPv6 for DHCPv4 ClientID as per RFC4361.
+ # Some non-RFC compliant DHCP servers do not reply with this set.
+ # In this case, comment out duid and enable clientid above.
+-duid
++#duid
+ 
+ # Persist interface configuration when dhcpcd exits.
+ persistent
+@@ -39,3 +39,21 @@
+ #slaac hwaddr
+ # OR generate Stable Private IPv6 Addresses based from the DUID
+ slaac private
++
++# Example static IP configuration:
++#interface eth0
++#static ip_address=192.168.0.10/24
++#static ip6_address=fd51:42f8:caae:d92e::ff/64
++#static routers=192.168.0.1
++#static domain_name_servers=192.168.0.1 8.8.8.8 fd51:42f8:caae:d92e::1
++
++# It is possible to fall back to a static IP if DHCP fails:
++# define static profile
++#profile static_eth0
++#static ip_address=192.168.1.23/24
++#static routers=192.168.1.1
++#static domain_name_servers=192.168.1.1
++
++# fallback to static profile on eth0
++#interface eth0
++#fallback static_eth0
