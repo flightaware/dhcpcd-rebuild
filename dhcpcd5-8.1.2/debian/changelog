@@ -1,3 +1,9 @@
+dhcpcd5 (1:8.1.2-1+rpt1+fa4) buster; urgency=medium
+
+  * applied https://roy.marples.name/cgit/dhcpcd.git/commit/?h=dhcpcd-8&id=40fcdef71dc07985049c7d6edda9198e760a8bcf
+
+ -- Oliver Jowett <oliver.jowett@flightaware.com>  Thu, 12 Mar 2020 19:13:46 +0800
+
 dhcpcd5 (1:8.1.2-1+rpt1) buster; urgency=medium
 
   * New upstream version 8.1.2
