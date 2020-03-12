@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+update-alternatives --quiet --install /sbin/dhcpcd dhcpcd /sbin/dhcpcd5 100 \
+	--slave /usr/share/man/man8/dhcpcd.8.gz dhcpcd.8.gz \
+		/usr/share/man/man8/dhcpcd5.8.gz
+
+addgroup --quiet --system netdev || true
+
+chown root:netdev /etc/dhcpcd.conf
+chmod 664 /etc/dhcpcd.conf
+
+#DEBHELPER#

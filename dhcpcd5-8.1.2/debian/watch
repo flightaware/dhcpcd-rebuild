@@ -1,0 +1,3 @@
+version=3
+http://roy.marples.name/downloads/dhcpcd/dhcpcd-([0-9\.]*)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz))) debian uupdate
+

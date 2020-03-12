@@ -1,0 +1,199 @@
+dhcpcd5 (1:8.1.2-1+rpt1) buster; urgency=medium
+
+  * New upstream version 8.1.2
+  * Remove -0001-Linux-Validate-RTM_DELADDR-RTM_NEWADDR-messages-for-.patch
+  * Disable sanitisation
+
+ -- Serge Schneider <serge@raspberrypi.org>  Wed, 13 Nov 2019 14:44:50 +0000
+
+dhcpcd5 (1:8.1.1-1+rpt2) buster; urgency=medium
+
+  * Bump update-alternatives to 150
+
+ -- Serge Schneider <serge@raspberrypi.org>  Fri, 25 Oct 2019 12:38:32 +0100
+
+dhcpcd5 (1:8.1.1-1+rpt1) buster; urgency=medium
+
+  * New upstream release
+  * Validate RTM_DELADDR/RTM_NEWADDR messages for IPv6
+
+ -- Serge Schneider <serge@raspberrypi.org>  Wed, 23 Oct 2019 12:07:37 +0100
+
+dhcpcd5 (1:7.0.8-0.1+rpt1) buster; urgency=medium
+
+  * Add systemd service
+  * Enable wpa_supplicant hook
+  * Bump epoch
+  * Make dhcpcd.conf writable by netdev group
+  * Prevent dhcpcd from running when /etc/network/interface is configured
+  * Fix 50-ntp.conf hook
+    https://github.com/RPi-Distro/repo/issues/81
+  * Add static IP example in dhcpcd.conf
+  * Default wpa_supplicant_driver to nl80211,wext
+  * Add pkg-config build-dep
+
+ -- Serge Schneider <serge@raspberrypi.org>  Thu, 24 Jan 2019 14:05:00 +0000
+
+dhcpcd5 (7.0.8-0.1) unstable; urgency=medium
+
+  [ Gianfranco Costamagna ]
+  * New upstream release.
+  * Non-maintainer upload.
+    - Closes: #846938
+  * Switch control/copyright files in secure mode
+
+  [ Julien Lavergne ]
+  * New upstream release.
+  * debian/control:
+   - Add lsb-base (>= 3.0-6) on depends, for the init script.
+  * debian/patches:
+   - Disable, merged upstream.
+  * debian/copyright:
+   - Update copyright.
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Wed, 26 Sep 2018 10:03:43 +0200
+
+dhcpcd5 (6.10.1-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #813595)
+  * Fix CVE-2016-1504 invalid read/crash
+     via malformed dhcp responses by upstream (Closes: #810620)
+  * Fix CVE-2016-1503 heap overflow via malformed
+     dhcp responses in print_option (via dhcp_envoption1)
+     due to incorrect option length values by upstream (Closes: #810621)
+  * d/control:
+     - Bump Standards-Version to 3.9.7
+  * Fix dhcpcd5 FTBFS on kfreebsd-amd64
+     and kfreebsd-i386 by upstream (Closes: #815338)
+  * Fix Multiplication of IPv6 addresses by upstream (Closes: #791582)
+  * d/rules:
+     - Add hardening
+  * d/patches:
+     - fix-spelling-error for all older files
+     - fix-spelling-error-in-manpage for manpage`s
+  * d/dhcpcd5.lintian-overrides:
+     - Add overrides for spelling error binary false positive
+  * recommended revision in your dhcp by upstream (Closes: #799795)
+
+ -- Jose dos Santos Junior <j.s.junior@live.com>  Mon, 04 Apr 2016 09:58:32 -0300
+
+dhcpcd5 (6.9.3-1) unstable; urgency=medium
+
+  * New upstream release
+    - Fixed Multiplication of IPv6 addresses by upstream (Closes: #791582)
+    - Fixed dhcpcd doesn't configure chrony by upstream (Closes: #791583)
+  * New maintainer (Closes: #770082)
+  * Remove lintian overrides.
+  * d/dhcpd5.init:
+      - Added $remote_fs for script init.d
+
+ -- Jose dos Santos Junior <j.s.junior@live.com>  Mon, 14 Sep 2015 12:11:25 -0300
+
+dhcpcd5 (6.9.1-1) unstable; urgency=medium
+
+  * QA Upload.
+  * New upstream release. Closes: #791558
+  * Update d/watch file
+
+ -- Daniel Echeverry <epsilon77@gmail.com>  Sun, 26 Jul 2015 17:35:55 -0500
+
+dhcpcd5 (6.9.0-1) unstable; urgency=low
+
+  * QA Upload
+  * New upstream release. Closes: #786772 #758713 #782085
+  * debian/control
+    + Change Replaces instead conflicts field
+    + Bump Standards-Version 3.9.6
+      + Update to DEP5 copyright format 1.0
+  * debian/rules
+    + Add DEB_HOST_GNU_TYPE and DEB_BUILD_GNU_TYPE
+  * debian/patches
+    + Add fix_ftbfs_kfreebsd.diff patch
+      + Fix ftbfs on kfreebsd Closes: #770464
+    + Add fix_manpage.diff patch
+      * Fix lintian warning
+    + Remove CVE-2014-6060.patch patch
+      + Merge with upstream
+    + Remove kfreebsd.diff patch
+      * Upstream removed platform-bsd.c file in new version
+  * debian/prerm
+    + Replace bashim with set -e
+  * debian/postint
+    + Replace bashim with set -e
+  * debian/postrm
+    + Replace bashim with set -e
+
+ -- Daniel Echeverry <epsilon77@gmail.com>  Wed, 03 Jun 2015 10:43:23 -0500
+
+dhcpcd5 (6.0.5-2) unstable; urgency=medium
+
+  * QA upload.
+
+  [ Pierre Schweitzer ]
+  * Fix denial of service (CVE-2014-6060) in dhcpcd5. (Closes: #770043).
+
+  [ Salvatore Bonaccorso ]
+  * Refresh CVE-2014-6060.patch (offset)
+  * Update patch headers for CVE-2014-6060.patch.
+    Wrap long lines in fields and use Description field.
+    Add Applied-Upstream value.
+  * Set Maintainer to Debian QA Group (cf. #770082)
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Wed, 19 Nov 2014 17:08:30 +0100
+
+dhcpcd5 (6.0.5-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * debian/rules (taken from Ubuntu, thanks!):
+      - If config.mk doesn't exist, don't try to run dh_auto_clean.
+        This fixes a FTBFS. (Closes: #723967) (LP: #1251776)
+  * Add missing include for platform-bsd using patch from Petr Salinger
+    (Closes: #719588)
+
+ -- Christoph Egger <christoph@debian.org>  Wed, 04 Dec 2013 14:47:10 +0100
+
+dhcpcd5 (6.0.5-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Roy Marples <roy@marples.name>  Sun, 4 Aug 2013 08:00:44 +0100
+
+dhcpcd5 (6.0.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * recommend the resolvconf package as well (closes: 705759)
+  * -t 0 works (closes: 707705)
+
+ -- Roy Marples <roy@marples.name>  Tue, 25 Jun 2013 14:29:02 +0100
+
+dhcpcd5 (5.5.6-1) unstable; urgency=medium
+
+  * New upstream release
+  * 50-ntp.conf now checks for a valid /etc/ntp.conf (closes: 630420)
+  * Works better with netlink messages to work on bridges (closes: 634331)
+
+ -- Roy Marples <roy@marples.name>  Sun, 1 Apr 2012 09:03:27 +0100
+
+dhcpcd5 (5.2.12-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Roy Marples <roy@marples.name>  Wed, 6 Mar 2011 10:16:22 +0100
+
+dhcpcd5 (5.2.11-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Roy Marples <roy@marples.name>  Mon, 28 Feb 2011 20:35:37 +0100
+
+dhcpcd5 (5.2.8-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Roy Marples <roy@marples.name>  Fri, 22 Oct 2010 19:47:32 +0100
+
+dhcpcd5 (5.2.7-3) unstable; urgency=low
+
+  * Initial upload to Debian (closes: #594672)
+
+ -- Roy Marples <roy@marples.name>  Tue, 23 Sep 2010 10:57:38 +0100
