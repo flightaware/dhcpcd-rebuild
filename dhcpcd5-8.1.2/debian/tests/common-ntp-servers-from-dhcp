@@ -1,0 +1,123 @@
+# vi: ft=sh
+
+# These common functions ensure that NTP servers obtained from DHCP are
+# made available to the NTP daemon, and that they are removed when
+# releasing the DHCP lease.
+#
+# DEBUGGING NOTE: dhcpcd logs verbosely to the system log even with
+# --quiet.
+
+ntp_server_ipv4="192.168.1.50"
+ntp_server_ipv6="fdae:9322:f1cc::7"
+
+prepare_interfaces() {
+	echo "Preparing virtual interfaces..."
+	ip link add veth0 type veth peer name veth1
+	ip address add 192.168.1.1/24 dev veth0
+	ip address add fdae:9322:f1cc::1/48 dev veth0
+	ip link set dev veth0 up
+}
+
+dnsmasq_config() {
+	echo "Preparing dnsmasq configuration..."
+	cat <<EOF > /etc/dnsmasq.conf
+interface=veth0
+dhcp-range=192.168.1.100,192.168.1.150,12h
+dhcp-range=fdae:9322:f1cc::9,fdae:9322:f1cc::99,64,12h
+dhcp-option=option:ntp-server,$ntp_server_ipv4
+dhcp-option=option6:sntp-server,[$ntp_server_ipv6]
+enable-ra
+log-dhcp
+EOF
+}
+
+configure_interface() {
+	echo "Obtaining network configuration for veth1 via dhcp... "
+	dhcpcd --quiet \
+		--option=ntp_servers --option=dhcp6_sntp_servers \
+		--waitip=4 --waitip=6 \
+		--rebind veth1 2>&1
+}
+
+check_ntp_server_obtained() {
+	echo -n "Check if the NTP server is made available to daemon..."
+	fgrep -q $ntp_server_ipv4 $added_servers_ipv4 &&
+		fgrep -q $ntp_server_ipv6 $added_servers_ipv6 &&
+		$server_list_cmd | fgrep -q $ntp_server_ipv4 &&
+		$server_list_cmd | fgrep -q $ntp_server_ipv6 &&
+		echo "SUCCESS!"
+}
+
+deconfigure_interface() {
+	echo "Release the current lease... "
+	dhcpcd --quiet --release veth1
+}
+
+check_ntp_server_gone() {
+	echo -n "Check if the NTP server has been correctly removed... "
+	! fgrep -qs $ntp_server_ipv4 $added_servers_ipv4 &&
+		! fgrep -qs $ntp_server_ipv6 $added_servers_ipv6 &&
+		! $server_list_cmd | fgrep -q $ntp_server_ipv4 &&
+		! $server_list_cmd | fgrep -q $ntp_server_ipv6 &&
+		echo "SUCCESS!"
+}
+
+get_conf_hash() {
+	if [ -f "$added_servers_ipv4" ]; then
+		added_servers_ipv4_hash=$(sha256sum "$added_servers_ipv4" | cut -d' ' -f1)
+	fi
+	if [ -f "$added_servers_ipv6" ]; then
+		added_servers_ipv6_hash=$(sha256sum "$added_servers_ipv6" | cut -d' ' -f1)
+	fi
+}
+
+check_conf_hash() {
+	if [ -f "$added_servers_ipv4" ]; then
+		if [ -z "$added_servers_ipv4_hash" ]; then
+			# there's no hash, so the file didn't exist before
+			>&2 echo "ERROR: CONF FILE $added_servers_ipv4 created!"
+			return
+		fi
+		local new_ipv4_hash=$(sha256sum "$added_servers_ipv4" | cut -d' ' -f1)
+		if [ "$new_ipv4_hash" != "$added_servers_ipv4_hash" ]; then
+			>&2 echo "ERROR: CONF FILE $added_servers_ipv4 CHANGED!"
+		fi
+	elif [ -n "$added_servers_ipv4_hash" ]; then
+			# there's a hash, so the file existed before
+			>&2 echo "ERROR: CONF FILE $added_servers_ipv4 deleted!"
+			return
+	fi
+
+	if [ -f "$added_servers_ipv6" ]; then
+		if [ -z "$added_servers_ipv6_hash" ]; then
+			>&2 echo "ERROR: CONF FILE $added_servers_ipv6 created!"
+			return
+		fi
+		local new_ipv6_hash=$(sha256sum "$added_servers_ipv6" | cut -d' ' -f1)
+		if [ "$new_ipv6_hash" != "$added_servers_ipv6_hash" ]; then
+			>&2 echo "ERROR: CONF FILE $added_servers_ipv6 CHANGED!"
+		fi
+	elif [ -n "$added_servers_ipv6_hash" ]; then
+			>&2 echo "ERROR: CONF FILE $added_servers_ipv6 deleted!"
+			return
+	fi
+}
+
+run_test() {
+	get_conf_hash
+
+	prepare_interfaces
+	dnsmasq_config
+	systemctl restart dnsmasq
+	# reduce probability of race condition which causes dnsmasq to send RAs
+	# from public interface
+	sleep 5
+
+	configure_interface
+	check_ntp_server_obtained
+
+	deconfigure_interface
+	check_ntp_server_gone
+
+	check_conf_hash
+}

@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+added_servers_ipv4="/run/systemd/timesyncd.conf.d/01-dhcpcd.ipv4.veth1.conf"
+added_servers_ipv6="/run/systemd/timesyncd.conf.d/01-dhcpcd.ipv6.veth1.conf"
+server_list_cmd="timedatectl show-timesync"
+
+. debian/tests/common-ntp-servers-from-dhcp
+
+run_test

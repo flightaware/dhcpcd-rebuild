@@ -1,0 +1,2 @@
+# This commit is cherry-picked directly from upstream - spelling included.
+dhcpcd5 source: spelling-error-in-patch-description debian/patches/0002-DHCPv6-Fix-a-potential-buffer-overflow-reading-NA-TA.patch upto up to

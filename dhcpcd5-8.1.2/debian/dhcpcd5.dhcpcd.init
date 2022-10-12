@@ -13,7 +13,7 @@
 ### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
-DHCPCD=/sbin/dhcpcd
+DHCPCD=/usr/sbin/dhcpcd
 NAME=dhcpcd
 PIDFILE=/var/run/dhcpcd.pid
 

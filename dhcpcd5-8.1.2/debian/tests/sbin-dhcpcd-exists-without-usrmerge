@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+if [ ! -e /sbin/dhcpcd ]; then
+	>&2 echo "ERROR: missing /sbin/dhcpcd"
+	exit 1
+fi

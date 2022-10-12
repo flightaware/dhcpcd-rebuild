@@ -1,18 +1,29 @@
 Source: dhcpcd5
 Section: net
 Priority: optional
-Maintainer: Jose dos Santos Junior <j.s.junior@live.com>
-Build-Depends: debhelper (>= 9.20160709), libudev-dev, pkg-config
-Standards-Version: 3.9.7
+Maintainer: Scott Leggett <scott@sl.id.au>
+Build-Depends:
+ debhelper (>= 11), libudev-dev, pkg-config
+Standards-Version: 4.3.0
 Homepage: https://roy.marples.name/projects/dhcpcd
+Vcs-Browser: https://salsa.debian.org/smlx-guest/dhcpcd5
+Vcs-Git: https://salsa.debian.org/smlx-guest/dhcpcd5.git
 
 Package: dhcpcd5
-Provides: dhcp-client
+Provides:
+ dhcp-client
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-6)
-Replaces: dhcpcd-sv, dhcpcd (<< 3.2.3-6)
-Recommends: openresolv | resolvconf
-Suggests: dhcpcd-gtk
+Depends:
+ lsb-base (>= 3.0-6),
+ ${misc:Depends},
+ ${shlibs:Depends}
+Replaces:
+ dhcpcd (<< 3.2.3-6),
+ dhcpcd-sv
+Recommends:
+ openresolv | resolvconf
+Suggests:
+ dhcpcd-gtk
 Description: DHCPv4, IPv6RA and DHCPv6 client with IPv4LL support
  dhcpcd is a one stop network management daemon which includes
   * RFC compliant DHCPv4 and DHCPv6 clients

@@ -2,13 +2,33 @@
 
 set -e
 
-update-alternatives --quiet --install /sbin/dhcpcd dhcpcd /sbin/dhcpcd5 100 \
-	--slave /usr/share/man/man8/dhcpcd.8.gz dhcpcd.8.gz \
-		/usr/share/man/man8/dhcpcd5.8.gz
+if [ "$1" = configure ]; then
+  # Versions of the dhcpcd5 package prior to 7.0.8-1 didn't remove this
+  # alternative in postrm on upgrade. We don't provide this binary anymore, so
+  # remove this alternative to avoid dangling symlinks.
+  update-alternatives --remove dhcpcd /sbin/dhcpcd5
 
-addgroup --quiet --system netdev || true
+  # Add a /sbin/dhcpcd symlink as some scripts hard-code this path.
+  # This is only necessary on a non-usrmerge system.
+  if [ ! -e '/sbin/dhcpcd' ]; then
+    ln -s /usr/sbin/dhcpcd /sbin/dhcpcd
+  fi
 
-chown root:netdev /etc/dhcpcd.conf
-chmod 664 /etc/dhcpcd.conf
+  # Move DUID and leases from the location used by previous versions of the
+  # dhcpcd5 package, if necessary.
+  olddir=/var/lib/dhcpcd5
+  newdir=/var/lib/dhcpcd
+  if [ -d $olddir ]; then
+    if [ -n "$(ls -A $olddir)" ] && [ -z "$(ls -A $newdir)" ]; then
+      cp -ar $olddir/. $newdir
+    fi
+    rm -rf $olddir
+  fi
+
+  addgroup --quiet --system netdev || true
+  chown root:netdev /etc/dhcpcd.conf
+  chmod 664 /etc/dhcpcd.conf
+
+fi
 
 #DEBHELPER#

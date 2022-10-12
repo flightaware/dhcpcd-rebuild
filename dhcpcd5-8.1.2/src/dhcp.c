@@ -2331,10 +2331,9 @@ dhcp_message_new(struct bootp **bootp,
 static void
 dhcp_arp_defend_failed(struct arp_state *astate)
 {
-	struct interface *ifp = astate->iface;
 
-	dhcp_drop(ifp, "EXPIRED");
-	dhcp_start1(ifp);
+	dhcp_drop(astate->iface, "EXPIRED");
+	dhcp_start1(astate->iface);
 }
 #endif
 
@@ -4039,7 +4038,7 @@ dhcp_handleifa(int cmd, struct ipv4_addr *ia, pid_t pid)
 
 	ifo = ifp->options;
 	if (ifo->options & DHCPCD_INFORM) {
-		if (state->state != DHS_INFORM)
+		if (state->state != DHS_INFORM && state->state != DHS_BOUND)
 			dhcp_inform(ifp);
 		return ia;
 	}

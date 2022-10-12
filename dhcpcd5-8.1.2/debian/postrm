@@ -2,8 +2,15 @@
 
 set -e
 
+# The dhcpcd package stores leases and DUID in this directory, so we need to
+# remove it on purge.
 if [ "$1" = purge ]; then
-	rm -rf /var/lib/dhcpcd5
+  rm -rf /var/lib/dhcpcd
+fi
+
+# Remove the symlink added in postinst (if it exists).
+if [ "$1" = 'remove' ] && [ -L '/sbin/dhcpcd' ]; then
+  rm /sbin/dhcpcd
 fi
 
 #DEBHELPER#

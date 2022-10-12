@@ -85,7 +85,7 @@ is
 .Ar token
 then
 .Ar algorithm is
-snd_secretid/rcv_secretid so you can send and recieve different tokens.
+snd_secretid/rcv_secretid so you can send and receive different tokens.
 .It Ic authtoken Ar secretid Ar realm Ar expire Ar key
 Define a shared key for use in authentication.
 .Ar realm

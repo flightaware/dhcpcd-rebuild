@@ -1,1 +1,2 @@
-debian/wrapper/dhcpcd usr/lib/dhcpcd5/
+debian/hooks/*	/lib/dhcpcd/dhcpcd-hooks/
+debian/10-dhcpcd.conf	/lib/systemd/system/NetworkManager.service.d/

@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# autopkgtest-virt-ssh setup script that configures a testbed.
+# See man autopkgtest-virt-ssh for details.
+
+# This script requires a libvirt VM set up like this:
+#   * install Debian testing VM with ssh, and upgrade to unstable.
+#   * ssh-copy-id to VM, set a static IP address and a 1 second GRUB timeout.
+#   * power down and snapshot.
+#
+# The default VM and snapshot names are defined below, but can be overridden.
+#
+# Execute tests like this:
+#
+#   export SSH_HOST=... SSH_USER=... SSH_SUDO_PASS=... ...
+# 	autopkgtest -s ../build-area/*.changes -- ssh -s debian/autopkgtest-script
+
+set -e
+
+CAPABILITIES='isolation-machine,revert,revert-full-system,reboot'
+
+: "${SSH_VM:=unstable}"
+: "${SSH_SNAPSHOT:=test-ready}"
+
+for req_var in SSH_SUDO_PASS SSH_USER SSH_HOST; do
+	if [[ -z ${!req_var} ]]; then
+		(>&2 echo Please set ${req_var})
+		exit 2
+	fi
+done
+
+# create a testbed # configure sudo, etc.
+# print a list of "key=value" parameters to stdout on success
+# required: login, hostname
+# optional: identity, password, port, options, capabilities, extraopts
+open() {
+	# activate ssh agent
+	revert &&
+	cat<<EOF
+login=$SSH_USER
+hostname=$SSH_HOST
+password=$SSH_SUDO_PASS
+capabilities=$CAPABILITIES
+identity=$HOME/.ssh/id_rsa
+EOF
+}
+
+# called when closing the testbed; should revert/remove things installed in
+# open() if the testbed is not ephemeral
+cleanup() {
+    revert
+}
+
+# Called for reverting the testbed. This can optionally output some or all of
+# the ssh config keys from open() to update the configuration.
+# This only needs to be implemented if CAPABILITIES offers "revert".
+revert() {
+	virsh --connect qemu:///system snapshot-revert "$SSH_VM" \
+		--snapshotname "$SSH_SNAPSHOT" --running --force
+}
+
+# Called after "reboot". You only need to implement this if CAPABILITIES offers
+# "reboot" and you need to do something more elaborate than just waiting for
+# ssh to go down and come back.
+wait_reboot() {
+    exit 0
+}
+
+# Called when the setup script fails with nonzero or on timeouts waiting for
+# ssh or reboot. If available, this should output some debugging information,
+# such as the boot log from the serial console. Implementing this is optional.
+debug_failure() {
+    exit 1  # not implemented
+}
+
+case "$1" in
+    open)
+        open "$@";;
+    cleanup)
+        cleanup "$@";;
+    revert)
+        revert "$@";;
+    wait-reboot)
+        wait_reboot "$@";;
+    debug-failure)
+        debug_failure "$@";;
+    '')
+        echo "Needs to be called with command as first argument" >&2
+        exit 1
+        ;;
+    *)
+        echo "invalid command $1" >&2
+        exit 1
+        ;;
+esac

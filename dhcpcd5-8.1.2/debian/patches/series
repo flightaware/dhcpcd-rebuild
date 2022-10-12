@@ -1,5 +1,5 @@
+0001-Fix-typo-in-manpage.patch
 config.patch
-ntp.patch
-wireless.patch
 disable_sanitisation.patch
-address-defend.patch
+fix_reachable_test.patch
+Fix_infinite_INFORM_messages.patch

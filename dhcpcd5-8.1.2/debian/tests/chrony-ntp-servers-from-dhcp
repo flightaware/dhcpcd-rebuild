@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+added_servers_ipv4="/run/chrony-helper/added_servers"
+added_servers_ipv6="$added_servers_ipv4"
+server_list_cmd="chronyc -n sources"
+
+. debian/tests/common-ntp-servers-from-dhcp
+
+run_test

@@ -1,0 +1,23 @@
+Tests: chrony-ntp-servers-from-dhcp
+Depends: @, iproute2, dnsmasq, chrony
+Restrictions: isolation-machine, needs-root, breaks-testbed
+
+Tests: timesyncd-ntp-servers-from-dhcp
+Depends: @, iproute2, dnsmasq
+Restrictions: isolation-machine, needs-root, breaks-testbed
+
+Tests: ntpd-ntp-servers-from-dhcp
+Depends: @, iproute2, dnsmasq, ntp
+Restrictions: isolation-machine, needs-root, breaks-testbed
+
+Tests: openntpd-ntp-servers-from-dhcp
+Depends: @, iproute2, dnsmasq, openntpd
+Restrictions: isolation-machine, needs-root, breaks-testbed
+
+Tests: sbin-dhcpcd-exists-without-usrmerge
+Depends: @
+Restrictions:
+
+Tests: sbin-dhcpcd-exists-with-usrmerge
+Depends: @, usrmerge
+Restrictions: breaks-testbed

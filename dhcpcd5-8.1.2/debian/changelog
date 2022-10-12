@@ -1,44 +1,96 @@
-dhcpcd5 (1:8.1.2-1+rpt1+fa4) buster; urgency=medium
+dhcpcd5 (1:8.1.2-1+rpt7) bullseye; urgency=medium
 
-  * applied https://roy.marples.name/cgit/dhcpcd.git/commit/?h=dhcpcd-8&id=40fcdef71dc07985049c7d6edda9198e760a8bcf
+  * Add drop-in service to prevent dhcpcd from conflicting with NetworkManager
 
- -- Oliver Jowett <oliver.jowett@flightaware.com>  Thu, 12 Mar 2020 19:13:46 +0800
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 25 Jul 2022 16:48:05 +0100
 
-dhcpcd5 (1:8.1.2-1+rpt1) buster; urgency=medium
+dhcpcd5 (1:8.1.2-1+rpt6) bullseye; urgency=medium
+
+  * Fix infinite INFORM messages
+    - https://github.com/NetworkConfiguration/dhcpcd/pull/95
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 04 Apr 2022 17:39:40 +0100
+
+dhcpcd5 (1:8.1.2-1+rpt5) bullseye; urgency=medium
+
+  * IPv6ND: Fix reachable test
+    - https://github.com/RPi-Distro/repo/issues/286
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 17 Jan 2022 08:13:46 +0000
+
+dhcpcd5 (1:8.1.2-1+rpt4) bullseye; urgency=medium
+
+  * Add -q flag to avoid double logging
+   - https://github.com/RPi-Distro/raspi-config/issues/173
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 10 Jan 2022 09:26:19 +0000
+
+dhcpcd5 (1:8.1.2-1+rpt3) bullseye; urgency=medium
+
+  * Add libudev-dev and pkg-config dependencies
+    - pkg-config is required for udev to be detected
+    - https://github.com/RPi-Distro/repo/issues/274
+
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 17 Nov 2021 15:13:52 +0000
+
+dhcpcd5 (1:8.1.2-1+rpt2) bullseye; urgency=medium
 
   * New upstream version 8.1.2
-  * Remove -0001-Linux-Validate-RTM_DELADDR-RTM_NEWADDR-messages-for-.patch
-  * Disable sanitisation
+  * Install dhcpcd's wpa_supplicant hook
+  * Add netdev group and give it write access to dhcpcd.conf
+  * Background dhcpcd on launch to avoid startup delays
+  * Remove upstreamed patches
+  * Use hardware address instead of duid for Client ID
+    - https://github.com/raspberrypi/noobs/issues/336
+  * Disable address senitisation
 
- -- Serge Schneider <serge@raspberrypi.org>  Wed, 13 Nov 2019 14:44:50 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 22 Sep 2021 17:48:34 +0100
 
-dhcpcd5 (1:8.1.1-1+rpt2) buster; urgency=medium
+dhcpcd5 (7.1.0-2) unstable; urgency=high
 
-  * Bump update-alternatives to 150
+  * Apply upstream patches to fix potential security vulnerabilities:
+    CVE-2019-11578, CVE-2019-11579, CVE-2019-11577, and CVE-2019-11766.
+    (Closes: #928056, #928104, #928105, #928440)
+  * Add lintian override for upstream patch spelling
 
- -- Serge Schneider <serge@raspberrypi.org>  Fri, 25 Oct 2019 12:38:32 +0100
+ -- Scott Leggett <scott@sl.id.au>  Sun, 05 May 2019 21:55:14 +0800
 
-dhcpcd5 (1:8.1.1-1+rpt1) buster; urgency=medium
+dhcpcd5 (7.1.0-1) unstable; urgency=low
 
-  * New upstream release
-  * Validate RTM_DELADDR/RTM_NEWADDR messages for IPv6
+  * Upstream release 7.1.0
 
- -- Serge Schneider <serge@raspberrypi.org>  Wed, 23 Oct 2019 12:07:37 +0100
+ -- Scott Leggett <scott@sl.id.au>  Thu, 07 Feb 2019 08:54:56 +1100
 
-dhcpcd5 (1:7.0.8-0.1+rpt1) buster; urgency=medium
+dhcpcd5 (7.0.8-2) unstable; urgency=low
 
-  * Add systemd service
-  * Enable wpa_supplicant hook
-  * Bump epoch
-  * Make dhcpcd.conf writable by netdev group
-  * Prevent dhcpcd from running when /etc/network/interface is configured
-  * Fix 50-ntp.conf hook
-    https://github.com/RPi-Distro/repo/issues/81
-  * Add static IP example in dhcpcd.conf
-  * Default wpa_supplicant_driver to nl80211,wext
-  * Add pkg-config build-dep
+  * Fix quoting in autopkgtest-setup script
+  * Add tests for /sbin/dhcpcd symlink
+  * Add compatibility symlink for /sbin/dhcpcd (Closes: #920292)
+  * Bump Standards-Version
 
- -- Serge Schneider <serge@raspberrypi.org>  Thu, 24 Jan 2019 14:05:00 +0000
+ -- Scott Leggett <scott@sl.id.au>  Thu, 24 Jan 2019 22:56:05 +1100
+
+dhcpcd5 (7.0.8-1) unstable; urgency=low
+
+  * Remove unused lintian override
+  * Update watch URL to HTTPS
+  * Bump standards and compat versions
+  * Add patch for typo in manpage
+  * Revert to upstream binary naming
+  * Update maintainer scripts
+  * Update debian/copyright
+  * Update init script for new binary location
+  * Add systemd service file
+  * Update package maintainer (Closes: #914070)
+  * Run wrap-and-sort over the package
+  * Add VCS fields to control file
+  * Add hooks for chrony, ntp, systemd-timesyncd, and openntpd (Closes: #863462)
+  * Add autopkgtest-virt-ssh setup script
+  * Add autopkgtests for NTP hook scripts
+  * Disable built-in NTP hook script
+  * Update debian/copyright
+
+ -- Scott Leggett <scott@sl.id.au>  Thu, 27 Dec 2018 22:26:40 +1100
 
 dhcpcd5 (7.0.8-0.1) unstable; urgency=medium
 
