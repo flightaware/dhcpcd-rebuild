@@ -18,7 +18,7 @@ cp -a $TOP/dhcpcd5-8.1.2 $OUT
 cd $OUT
 
 case "$DIST" in
-    buster)
+    bullseye)
         ;;
     *)
         echo "Don't know how to build tcltls for a distribution named $DIST" >&2
