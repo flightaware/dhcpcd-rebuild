@@ -1,0 +1,17 @@
+Description: applied 40fcdef71dc07985049c7d6edda9198e760a8bcf address defend crash fix
+
+--- a/src/dhcp.c
++++ b/src/dhcp.c
+@@ -2331,9 +2331,10 @@
+ static void
+ dhcp_arp_defend_failed(struct arp_state *astate)
+ {
++	struct interface *ifp = astate->iface;
+ 
+-	dhcp_drop(astate->iface, "EXPIRED");
+-	dhcp_start1(astate->iface);
++	dhcp_drop(ifp, "EXPIRED");
++	dhcp_start1(ifp);
+ }
+ #endif
+ 

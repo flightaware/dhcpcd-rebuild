@@ -3,3 +3,5 @@ config.patch
 disable_sanitisation.patch
 fix_reachable_test.patch
 Fix_infinite_INFORM_messages.patch
+address-defend.patch
+fix_ntp_restart.patch
