@@ -1,4 +1,4 @@
-dhcpcd5 (1:8.1.2-1+rpt7+fa4) bullseye; urgency=medium
+dhcpcd5 (1:8.1.2-1+rpt8+fa4) bullseye; urgency=medium
 
   * applied https://roy.marples.name/cgit/dhcpcd.git/commit/?h=dhcpcd-8&id=40fcdef71dc07985049c7d6edda9198e760a8bcf
   * applied https://salsa.debian.org/smlx-guest/dhcpcd5/-/commit/62162b20e2fb14336f6d884ec6603ebf1d3ac463
